@@ -1,14 +1,14 @@
 
 //    Copyright 2012 Kap IT (http://www.kapit.fr/)
 //
-//    Licensed under the Apache License, Version 2.0 (the "License");
+//    Licensed under the Apache License, Version 2.0 (the 'License');
 //    you may not use this file except in compliance with the License.
 //    You may obtain a copy of the License at
 //
 //        http://www.apache.org/licenses/LICENSE-2.0
 //
 //    Unless required by applicable law or agreed to in writing, software
-//    distributed under the License is distributed on an "AS IS" BASIS,
+//    distributed under the License is distributed on an 'AS IS' BASIS,
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
@@ -20,7 +20,7 @@
 // *See (http://wiki.ecmascript.org/doku.php?id=harmony:observe)*
 
 (function (global) {
-    "use strict";
+    'use strict';
 
 
 
@@ -29,12 +29,12 @@
 
     // IsObject ES5 internal algorithm shim
     function isObject(obj) {
-        return obj && typeof obj === "object";
+        return obj && typeof obj === 'object';
     }
 
     // IsCallable ES5 internal algorithm shim
     function isCallable(func) {
-        return typeof func === "function";
+        return typeof func === 'function';
     }
 
     // setImmediate shim used to deliver changes records asynchronously
@@ -64,22 +64,22 @@
     // This object is used as the prototype of all the notifiers that are returned by Object.getNotifier(O).
     // see http://wiki.ecmascript.org/doku.php?id=harmony:observe#notifierprototype
     var NotifierPrototype = Object.create(Object.prototype);
-    Object.defineProperty(NotifierPrototype, "notify", {
+    Object.defineProperty(NotifierPrototype, 'notify', {
         value: function (changeRecord) {
             var notifier = this;
             if (!isObject(notifier)) {
-                throw new TypeError("this must be an Object, given " + notifier);
+                throw new TypeError('this must be an Object, given ' + notifier);
             }
             if (!isObject(changeRecord)) {
-                throw new TypeError("changeRecord must be an Object, given " + changeRecord);
+                throw new TypeError('changeRecord must be an Object, given ' + changeRecord);
             }
             if (!this.target) {
                 return;
             }
 
             var type = changeRecord.type;
-            if (typeof type !== "string") {
-                throw new TypeError("changeRecord.type must be a string, given " + type);
+            if (typeof type !== 'string') {
+                throw new TypeError('changeRecord.type must be a string, given ' + type);
             }
 
             var changeObservers = notifier.changeObservers;
@@ -88,14 +88,14 @@
             }
             var target = notifier.target,
                 newRecord = Object.create(Object.prototype);
-            Object.defineProperty(newRecord, "object", {
+            Object.defineProperty(newRecord, 'object', {
                 value: target,
                 writable : false,
                 enumerable : true,
                 configurable: false
             });
             for (var prop in changeRecord) {
-                if (prop !== "object") {
+                if (prop !== 'object') {
                     var value = changeRecord[prop];
                     Object.defineProperty(newRecord, prop, {
                         value: value,
@@ -126,7 +126,7 @@
 
 
     // Key used to store reference to notifier in objects
-    var notifierProperty = "__notifier__";
+    var notifierProperty = '__notifier__';
 
     // Implementation of the internal algorithm 'GetNotifier'
     // described in the proposal.
@@ -151,7 +151,7 @@
 
     // Key used to store reference to a list of pending changeRecords
     // in observer callback.
-    var pendingChangesProperty  = "__pendingChangeRecords__";
+    var pendingChangesProperty  = '__pendingChangeRecords__';
 
     // Implementation of the internal algorithm 'EnqueueChangeRecord'
     // described in the proposal.
@@ -173,7 +173,7 @@
     }
 
     // key used to store a count of associated notifier to a function
-    var attachedNotifierCountProperty = "___attachedNotifierCount__";
+    var attachedNotifierCountProperty = '___attachedNotifierCount__';
 
     // In the proposal the ObserverCallBack has a weak reference over observers,
     // Without this possibility we need to clean this list to avoid memory leak
@@ -182,7 +182,7 @@
     function cleanObserver(observer) {
         if (!observer[attachedNotifierCountProperty] && !observer[pendingChangesProperty]) {
             var index = observerCallbacks.indexOf(observer);
-            if (index != -1) {
+            if (index !== -1) {
                 observerCallbacks.splice(index, 1);
             }
         }
@@ -231,15 +231,15 @@
     // described in the proposal.
     // See http://wiki.ecmascript.org/doku.php?id=harmony:observe#object.observe
     Object.observe = function (target, observer) {
-        if (typeof target !== "object") {
-            throw new TypeError("target must be an Object, given " + target);
+        if (typeof target !== 'object') {
+            throw new TypeError('target must be an Object, given ' + target);
         }
-        if (typeof observer !== "function") {
-            throw new TypeError("observerCallBack must be a function, given " + observer);
+        if (typeof observer !== 'function') {
+            throw new TypeError('observerCallBack must be a function, given ' + observer);
         }
 
         if (Object.isFrozen(observer)) {
-            throw new TypeError("observer can't be frozen");
+            throw new TypeError('observer cannot be frozen');
         }
 
         var notifier = getNotifier(target),
@@ -268,15 +268,15 @@
     // See http://wiki.ecmascript.org/doku.php?id=harmony:observe#object.unobseve
     Object.unobserve = function (target, observer) {
         if (!isObject(target)) {
-            throw new TypeError("target must be an Object, given " + target);
+            throw new TypeError('target must be an Object, given ' + target);
         }
-        if (typeof observer !== "function") {
-            throw new TypeError("observerCallBack must be a function, given " + observer);
+        if (typeof observer !== 'function') {
+            throw new TypeError('observerCallBack must be a function, given ' + observer);
         }
         var notifier = getNotifier(target);
         var changeObservers = notifier.changeObservers;
         var index = notifier.changeObservers.indexOf(observer);
-        if (index != -1) {
+        if (index !== -1) {
             changeObservers.splice(index, 1);
             observer[attachedNotifierCountProperty]--;
             cleanObserver(observer);
@@ -289,7 +289,7 @@
     // See http://wiki.ecmascript.org/doku.php?id=harmony:observe#object.deliverchangerecords
     Object.deliverChangeRecords = function (observer) {
         if (!isCallable(observer)) {
-            throw new TypeError("callback must be a function, given " + observer);
+            throw new TypeError('callback must be a function, given ' + observer);
         }
         while (deliverChangeRecords(observer)) {}
         return;
@@ -300,7 +300,7 @@
     // See http://wiki.ecmascript.org/doku.php?id=harmony:observe#object.getnotifier
     Object.getNotifier = function (target) {
         if (!isObject(target)) {
-            throw new TypeError("target must be an Object, given " + target);
+            throw new TypeError('target must be an Object, given ' + target);
         }
         return getNotifier(target);
     };

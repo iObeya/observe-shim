@@ -1,8 +1,8 @@
 (function (global) {
-    "use strict";
+    'use strict';
 
     var ObserveUtils;
-    if (typeof exports !== "undefined") {
+    if (typeof exports !== 'undefined') {
         ObserveUtils = exports;
     } else {
         ObserveUtils = global.ObserveUtils = {};
@@ -17,7 +17,7 @@
         if (desc === undefined) {
             return false;
         }
-        return ("get" in desc || "set" in desc);
+        return ('get' in desc || 'set' in desc);
     }
 
 
@@ -27,7 +27,7 @@
     function getPropertyDescriptor(target, name) {
         var pd = Object.getOwnPropertyDescriptor(target, name), // calls getOwnPropertyDescriptor trap
             proto = Object.getPrototypeOf(target);
-        while (typeof pd === "undefined" && proto !== null) {
+        while (typeof pd === 'undefined' && proto !== null) {
             pd = Object.getOwnPropertyDescriptor(proto, name);
             proto = Object.getPrototypeOf(proto);
         }
@@ -36,7 +36,7 @@
 
     // IsObject ES5 internal algorithm shim
     function isObject(obj) {
-        return obj && typeof obj === "object";
+        return obj && typeof obj === 'object';
     }
 
     // egal shim
@@ -51,7 +51,7 @@
         // NaNs are the only non-reflexive value, i.e., if x !== x,
         // then x is a NaN.
         // isNaN is broken: it converts its argument to number, so
-        // isNaN("foo") => true
+        // isNaN('foo') => true
         return x !== x && y !== y;
     }
 
@@ -63,7 +63,7 @@
 
     // Define a property on an object that will call the Notifier.notify method when updated
     function defineObservableProperty(target, property, originalValue) {
-        var internalPropName = "_" + (uidCounter++) + property;
+        var internalPropName = '_' + (uidCounter++) + property;
 
         Object.defineProperty(target, internalPropName, {
             value: originalValue,
@@ -81,7 +81,7 @@
                     var oldValue = this[internalPropName];
                     this[internalPropName] = value;
                     var notifier = Object.getNotifier(this);
-                    notifier.notify({ type: "updated", object: this, name: property, oldValue: oldValue });
+                    notifier.notify({ type: 'updated', object: this, name: property, oldValue: oldValue });
                 }
             },
             enumerable: true,
@@ -93,7 +93,7 @@
     // call defineObservableProperty for each property name passed as 'rest argument'
     ObserveUtils.defineObservableProperties = function (target) {
         if (!isObject(target)) {
-            throw new TypeError("target must be an Object, given " + target);
+            throw new TypeError('target must be an Object, given ' + target);
         }
         var properties = Array.prototype.slice.call(arguments, 1);
         while (properties.length > 0) {

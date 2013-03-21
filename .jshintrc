@@ -15,5 +15,7 @@
     "es5": true,
     "esnext": true,
     "regexp": true,
-    "smarttabs": true
+    "smarttabs": true,
+    "eqeqeq" : true,
+    "quotmark" : "single"
 }
