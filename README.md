@@ -6,7 +6,7 @@ See : [The harmony proposal page](http://wiki.ecmascript.org/doku.php?id=harmony
 Goal:
 ----
 
-This shim provides an implementation of the algorithms described in the harmony proposal, and is intended to work on all ES5-compliant environments.
+This shim provides an implementation of the algorithms described in the harmony proposal, and is intended to work on all ES5-compliant browsers.
 
 
 Dependencies :
