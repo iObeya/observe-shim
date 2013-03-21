@@ -22,10 +22,10 @@
 
 
 
-    // getProperty descriptor
-    // copied from http://wiki.ecmascript.org/doku.php?id=harmony:egal
+    // getPropertyDescriptor shim
+    // copied from [es6-shim](https://github.com/paulmillr/es6-shim)
     function getPropertyDescriptor(target, name) {
-        var pd = Object.getOwnPropertyDescriptor(target, name), // calls getOwnPropertyDescriptor trap
+        var pd = Object.getOwnPropertyDescriptor(target, name),
             proto = Object.getPrototypeOf(target);
         while (typeof pd === 'undefined' && proto !== null) {
             pd = Object.getOwnPropertyDescriptor(proto, name);
@@ -40,7 +40,7 @@
     }
 
     // egal shim
-    // copied from http://wiki.ecmascript.org/doku.php?id=harmony:egal
+    // copied from [the ecmascript wiki](http://wiki.ecmascript.org/doku.php?id=harmony:egal)
     function sameValue(x, y) {
         if (x === y) {
             // 0 === -0, but they are not identical

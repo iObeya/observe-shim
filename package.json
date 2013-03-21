@@ -1,42 +1,44 @@
 {
-    "name": "observe-shim",
-    "description": "An Object.observe harmony proposal shim",
-    "version": "0.0.1",
-    "keywords": [
-        "observe",
-        "data binding"
-    ],
-    "author": {
-        "name": "Kap IT",
-        "email": "contact@kapit.fr",
-        "url": "http://www.kapit.fr/"
-    },
-    "contributors": [
-        {
-            "name": "François de Campredon",
-            "email": "fdecampredon@kapit.fr",
-            "url": "http://francois.de-campredon.fr/"
-        }
-    ],
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/kapit/observe-shim.git"
-    },
-    "main": "dist/observe-shim.js",
-    "scripts": {
-        "test": "grunt test"
-    },
-    "dependencies": {},
-    "devDependencies": {
-        "matchdep": "~0.1.1",
-        "grunt": "~0.4.0",
-        "grunt-contrib-jshint": "~0.1.1",
-        "grunt-mocha": "~0.2.3",
-        "grunt-contrib-concat": "~0.1.3",
-        "grunt-contrib-uglify": "~0.2.0"
-    },
-    "licenses": {
-        "type": "Apache-2.0",
-        "url": "http://www.apache.org/licenses/LICENSE-2.0"
+  "name": "observe-shim",
+  "description": "An Object.observe harmony proposal shim",
+  "version": "0.0.1",
+  "keywords": [
+    "observe",
+    "data binding"
+  ],
+  "author": {
+    "name": "Kap IT",
+    "email": "contact@kapit.fr",
+    "url": "http://www.kapit.fr/"
+  },
+  "contributors": [
+    {
+      "name": "François de Campredon",
+      "email": "fdecampredon@kapit.fr",
+      "url": "http://francois.de-campredon.fr/"
     }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kapit/observe-shim.git"
+  },
+  "main": "dist/observe-shim.js",
+  "scripts": {
+    "test": "grunt test"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "matchdep": "~0.1.1",
+    "grunt": "~0.4.0",
+    "grunt-contrib-jshint": "~0.1.1",
+    "grunt-mocha": "~0.2.3",
+    "grunt-contrib-concat": "~0.1.3",
+    "grunt-contrib-uglify": "~0.2.0",
+    "grunt-docco": "~0.2.0",
+    "grunt-contrib-clean": "~0.4.0"
+  },
+  "licenses": {
+    "type": "Apache-2.0",
+    "url": "http://www.apache.org/licenses/LICENSE-2.0"
+  }
 }

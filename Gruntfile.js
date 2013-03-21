@@ -16,6 +16,9 @@ module.exports = function (grunt) {
                 run : true
             }
         },
+        clean : {
+            folder : ['docs','dist']
+        },
         concat: {
             dist: {
                 src: sourceFiles,
@@ -28,9 +31,15 @@ module.exports = function (grunt) {
                     'dist/observe-shim.min.js': sourceFiles
                 }
             }
+        },
+        docco: {
+            src: ['src/*.js'],
+            options: {
+                output: 'docs/'
+            }
         }
     });
 
     grunt.registerTask('test', ['jshint', 'mocha']);
-    grunt.registerTask('default', ['test','concat','uglify']);
+    grunt.registerTask('default', ['test','clean','concat','uglify','docco']);
 };

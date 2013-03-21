@@ -17,7 +17,7 @@
 // Object.observe PolyFill
 // =======================
 
-// *See (http://wiki.ecmascript.org/doku.php?id=harmony:observe)*
+// *See [The harmony proposal page](http://wiki.ecmascript.org/doku.php?id=harmony:observe)*
 
 (function (global) {
     'use strict';
@@ -39,11 +39,11 @@
 
     // setImmediate shim used to deliver changes records asynchronously
 
-    //use buit in if exist
+    //use setImmediate if available
     var setImmediate = global.setImmediate || global.msSetImmediate;
     var clearImmediate = global.clearImmediate || global.msClearImmediate;
     if (!setImmediate) {
-        // fallback on setTimeout if nothing else can be used
+        // fallback on setTimeout if not
         setImmediate = function (func, args) {
             return setTimeout(func, 0, args);
         };
@@ -58,11 +58,11 @@
     // -------------------
 
     // An ordered list used to provide a deterministic ordering in which callbacks are called.
-    // see http://wiki.ecmascript.org/doku.php?id=harmony:observe#observercallbacks
+    // [Corresponding Section in ecma script wiki](http://wiki.ecmascript.org/doku.php?id=harmony:observe#observercallbacks)
     var observerCallbacks = [];
 
     // This object is used as the prototype of all the notifiers that are returned by Object.getNotifier(O).
-    // see http://wiki.ecmascript.org/doku.php?id=harmony:observe#notifierprototype
+    // [Corresponding Section in ecma script wiki](http://wiki.ecmascript.org/doku.php?id=harmony:observe#notifierprototype)
     var NotifierPrototype = Object.create(Object.prototype);
     Object.defineProperty(NotifierPrototype, 'notify', {
         value: function (changeRecord) {
@@ -130,7 +130,7 @@
 
     // Implementation of the internal algorithm 'GetNotifier'
     // described in the proposal.
-    // See http://wiki.ecmascript.org/doku.php?id=harmony:observe#getnotifier
+    // [Corresponding Section in ecma script wiki](http://wiki.ecmascript.org/doku.php?id=harmony:observe#getnotifier)
     function getNotifier(target) {
         if (!target.hasOwnProperty(notifierProperty)) {
             var notifier = Object.create(NotifierPrototype);
@@ -155,7 +155,7 @@
 
     // Implementation of the internal algorithm 'EnqueueChangeRecord'
     // described in the proposal.
-    // See http://wiki.ecmascript.org/doku.php?id=harmony:observe#enqueuechangerecord
+    // [Corresponding Section in ecma script wiki](http://wiki.ecmascript.org/doku.php?id=harmony:observe#enqueuechangerecord)
     function enqueueChangeRecord(newRecord, observers) {
         for (var i = 0, l = observers.length; i < l; i++) {
             var observer =  observers[i];
@@ -175,10 +175,10 @@
     // key used to store a count of associated notifier to a function
     var attachedNotifierCountProperty = '___attachedNotifierCount__';
 
-    // In the proposal the ObserverCallBack has a weak reference over observers,
-    // Without this possibility we need to clean this list to avoid memory leak
     // Remove reference all reference to an observer callback,
     // if this one is not used anymore.
+    // In the proposal the ObserverCallBack has a weak reference over observers,
+    // Without this possibility we need to clean this list to avoid memory leak
     function cleanObserver(observer) {
         if (!observer[attachedNotifierCountProperty] && !observer[pendingChangesProperty]) {
             var index = observerCallbacks.indexOf(observer);
@@ -190,7 +190,7 @@
 
     // Implementation of the internal algorithm 'DeliverChangeRecords'
     // described in the proposal.
-    // See http://wiki.ecmascript.org/doku.php?id=harmony:observe#deliverchangerecords
+    // [Corresponding Section in ecma script wiki](http://wiki.ecmascript.org/doku.php?id=harmony:observe#deliverchangerecords)
     function deliverChangeRecords(observer) {
         var pendingChangeRecords = observer[pendingChangesProperty];
         observer[pendingChangesProperty] = null;
@@ -211,7 +211,7 @@
 
     // Implementation of the internal algorithm 'DeliverAllChangeRecords'
     // described in the proposal.
-    // See http://wiki.ecmascript.org/doku.php?id=harmony:observe#deliverallchangerecords
+    // [Corresponding Section in ecma script wiki](http://wiki.ecmascript.org/doku.php?id=harmony:observe#deliverallchangerecords)
     function deliverAllChangeRecords() {
         var observers = observerCallbacks;
         var anyWorkDone = false;
@@ -229,7 +229,7 @@
 
     // Implementation of the public api 'Object.observe'
     // described in the proposal.
-    // See http://wiki.ecmascript.org/doku.php?id=harmony:observe#object.observe
+    // [Corresponding Section in ecma script wiki](http://wiki.ecmascript.org/doku.php?id=harmony:observe#object.observe)
     Object.observe = function (target, observer) {
         if (typeof target !== 'object') {
             throw new TypeError('target must be an Object, given ' + target);
@@ -265,7 +265,7 @@
 
     // Implementation of the public api 'Object.unobseve'
     // described in the proposal.
-    // See http://wiki.ecmascript.org/doku.php?id=harmony:observe#object.unobseve
+    // [Corresponding Section in ecma script wiki](http://wiki.ecmascript.org/doku.php?id=harmony:observe#object.unobseve)
     Object.unobserve = function (target, observer) {
         if (!isObject(target)) {
             throw new TypeError('target must be an Object, given ' + target);
@@ -286,7 +286,7 @@
 
     // Implementation of the public api 'Object.deliverChangeRecords'
     // described in the proposal.
-    // See http://wiki.ecmascript.org/doku.php?id=harmony:observe#object.deliverchangerecords
+    // [Corresponding Section in ecma script wiki](http://wiki.ecmascript.org/doku.php?id=harmony:observe#object.deliverchangerecords)
     Object.deliverChangeRecords = function (observer) {
         if (!isCallable(observer)) {
             throw new TypeError('callback must be a function, given ' + observer);
@@ -297,7 +297,7 @@
 
     // Implementation of the public api 'Object.getNotifier'
     // described in the proposal.
-    // See http://wiki.ecmascript.org/doku.php?id=harmony:observe#object.getnotifier
+    // [Corresponding Section in ecma script wiki](http://wiki.ecmascript.org/doku.php?id=harmony:observe#object.getnotifier)
     Object.getNotifier = function (target) {
         if (!isObject(target)) {
             throw new TypeError('target must be an Object, given ' + target);
@@ -334,10 +334,10 @@
 
 
 
-    // getProperty descriptor
-    // copied from http://wiki.ecmascript.org/doku.php?id=harmony:egal
+    // getPropertyDescriptor shim
+    // copied from [es6-shim](https://github.com/paulmillr/es6-shim)
     function getPropertyDescriptor(target, name) {
-        var pd = Object.getOwnPropertyDescriptor(target, name), // calls getOwnPropertyDescriptor trap
+        var pd = Object.getOwnPropertyDescriptor(target, name),
             proto = Object.getPrototypeOf(target);
         while (typeof pd === 'undefined' && proto !== null) {
             pd = Object.getOwnPropertyDescriptor(proto, name);
@@ -352,7 +352,7 @@
     }
 
     // egal shim
-    // copied from http://wiki.ecmascript.org/doku.php?id=harmony:egal
+    // copied from [the ecmascript wiki](http://wiki.ecmascript.org/doku.php?id=harmony:egal)
     function sameValue(x, y) {
         if (x === y) {
             // 0 === -0, but they are not identical
