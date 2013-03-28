@@ -25,9 +25,7 @@ Instead it let you call manually the notify method :
 ObserveUtils :
 --------------
 
-The shim provides also an utilities to define some properties with accessor that will auto-notify their changes :
-
-    ObserveUtils.defineObservableProperties(myObject,"foo","bar");
+The ['observe-utils.js'](http://github.com/kapit/observe-utils/) utilities that facilitate the use of this shim can be found on his [own repository](http://github.com/kapit/observe-utils/)
 
 Usage :
 -------

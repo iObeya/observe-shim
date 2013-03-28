@@ -1,7 +1,7 @@
 {
     "name": "observe-shim",
-    "version": "0.0.1",
-    "main": "dist/observe-shim.js",
+    "version": "0.0.2",
+    "main": "lib/observe-shim.js",
     "devDependencies": {
         "mocha" : "~1.8.x",
         "expect" : "~0.2.0",

@@ -1,10 +1,25 @@
+//    Copyright 2012 Kap IT (http://www.kapit.fr/)
+//
+//    Licensed under the Apache License, Version 2.0 (the 'License');
+//    you may not use this file except in compliance with the License.
+//    You may obtain a copy of the License at
+//
+//        http://www.apache.org/licenses/LICENSE-2.0
+//
+//    Unless required by applicable law or agreed to in writing, software
+//    distributed under the License is distributed on an 'AS IS' BASIS,
+//    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//    See the License for the specific language governing permissions and
+//    limitations under the License.
+//    Author : François de Campredon (http://francois.de-campredon.fr/),
+
 /*global describe, it, expect , beforeEach, afterEach, sinon*/
 
 describe('Observe.observe harmony proposal shim', function () {
     'use strict';
 
     describe('Object.observe', function () {
-        it("should throw an error when passing an non object at first parameter", function () {
+        it('should throw an error when passing an non object at first parameter', function () {
             expect(function () {
                 Object.observe(5, function () {  });
             }).to.throwException(function (e) {
@@ -12,7 +27,7 @@ describe('Observe.observe harmony proposal shim', function () {
             });
 
             expect(function () {
-                Object.observe("g", function () { });
+                Object.observe('g', function () { });
             }).to.throwException(function (e) {
                 expect(e).to.be.a(TypeError);
             });
@@ -42,7 +57,7 @@ describe('Observe.observe harmony proposal shim', function () {
             });
         });
 
-        it("should throw and error when second parameter is not callable", function () {
+        it('should throw and error when second parameter is not callable', function () {
             expect(function () {
                 Object.observe({}, {});
             }).to.throwException(function (e) {
@@ -50,10 +65,10 @@ describe('Observe.observe harmony proposal shim', function () {
             });
         });
 
-        it("should throw and error when second parameter is frozen", function () {
+        it('should throw and error when second parameter is frozen', function () {
             var observer = function () {
             };
-            Object.freeze(observer)
+            Object.freeze(observer);
             expect(function () {
                 Object.observe({}, observer);
             }).to.throwException(function (e) {
@@ -63,7 +78,7 @@ describe('Observe.observe harmony proposal shim', function () {
     });
 
     describe('Object.unobserve', function () {
-        it("should throw an error when passing an non object at first parameter", function () {
+        it('should throw an error when passing an non object at first parameter', function () {
             expect(function () {
                 Object.unobserve(5, function () {
                 });
@@ -72,7 +87,7 @@ describe('Observe.observe harmony proposal shim', function () {
             });
 
             expect(function () {
-                Object.unobserve("g", function () { });
+                Object.unobserve('g', function () { });
             }).to.throwException(function (e) {
                 expect(e).to.be.a(TypeError);
             });
@@ -102,7 +117,7 @@ describe('Observe.observe harmony proposal shim', function () {
             });
         });
 
-        it("should throw and error when second parameter is not callable", function () {
+        it('should throw and error when second parameter is not callable', function () {
             expect(function () {
                 Object.unobserve({}, {});
             }).to.throwException(function (e) {
@@ -112,7 +127,7 @@ describe('Observe.observe harmony proposal shim', function () {
     });
 
     describe('Object.getNotifier', function () {
-        it("should throw an error when passing an non object at first parameter", function () {
+        it('should throw an error when passing an non object at first parameter', function () {
             expect(function () {
                 Object.getNotifier(5);
             }).to.throwException(function (e) {
@@ -120,7 +135,7 @@ describe('Observe.observe harmony proposal shim', function () {
             });
 
             expect(function () {
-                Object.getNotifier("g");
+                Object.getNotifier('g');
             }).to.throwException(function (e) {
                 expect(e).to.be.a(TypeError);
             });
@@ -152,19 +167,19 @@ describe('Observe.observe harmony proposal shim', function () {
 
 
 
-        it("should return a notifier with a 'notify' function,  configurable, writable and not enumerable  ", function () {
+        it('should return a notifier with a "notify" function,  configurable, writable and not enumerable', function () {
             var notifier = Object.getNotifier({}),
                 notifyDesc = Object.getOwnPropertyDescriptor(Object.getPrototypeOf(notifier), 'notify');
 
             expect(notifyDesc).to.be.ok();
-            expect(notifyDesc.value).to.be.a("function");
+            expect(notifyDesc.value).to.be.a('function');
             expect(notifyDesc.configurable).to.be.ok();
             expect(notifyDesc.writable).to.be.ok();
             expect(notifyDesc.enumerable).not.to.be.ok();
         });
 
 
-        it("should return a unique notifier for a given object", function () {
+        it('should return a unique notifier for a given object', function () {
             var obj = {},
                 notifier = Object.getNotifier(obj),
                 notifier1 = Object.getNotifier(obj);
@@ -174,7 +189,7 @@ describe('Observe.observe harmony proposal shim', function () {
     });
 
     describe('Object.deliverChangeRecords', function () {
-        it("should throw an error when passing an non object at first parameter", function () {
+        it('should throw an error when passing an non object at first parameter', function () {
             expect(function () {
                 Object.unobserve(5, function () { });
             }).to.throwException(function (e) {
@@ -182,7 +197,7 @@ describe('Observe.observe harmony proposal shim', function () {
             });
 
             expect(function () {
-                Object.unobserve("g", function () { });
+                Object.unobserve('g', function () { });
             }).to.throwException(function (e) {
                 expect(e).to.be.a(TypeError);
             });
@@ -212,7 +227,7 @@ describe('Observe.observe harmony proposal shim', function () {
             });
         });
 
-        it("should throw and error when second parameter is not callable", function () {
+        it('should throw and error when second parameter is not callable', function () {
             expect(function () {
                 Object.unobserve({}, {});
             }).to.throwException(function (e) {
@@ -226,7 +241,7 @@ describe('Observe.observe harmony proposal shim', function () {
 
         var notifier = Object.getNotifier({});
 
-        it("should throw an error when passing an non-object as parameter", function () {
+        it('should throw an error when passing an non-object as parameter', function () {
             expect(function () {
                 notifier.notify(5);
             }).to.throwException(function (e) {
@@ -235,7 +250,7 @@ describe('Observe.observe harmony proposal shim', function () {
         });
 
 
-        it("should throw an error when the property type of the first parameter is not a string", function () {
+        it('should throw an error when the property type of the first parameter is not a string', function () {
             expect(function () {
                 notifier.notify({ type: 4 });
             }).to.throwException(function (e) {
@@ -246,7 +261,7 @@ describe('Observe.observe harmony proposal shim', function () {
 
     });
 
-    describe("Changes  delivery", function () {
+    describe('Changes  delivery', function () {
         var obj, notifier, observer;
 
         beforeEach(function () {
@@ -262,12 +277,12 @@ describe('Observe.observe harmony proposal shim', function () {
         });
 
 
-        function getDeliveredRecords(){
+        function getDeliveredRecords() {
             return observer.args[0][0];
         }
 
 
-        it("should call the observer when a change record is delivered", function () {
+        it('should call the observer when a change record is delivered', function () {
             notifier.notify({
                 type: 'updated',
                 name: 'foo'
@@ -278,7 +293,7 @@ describe('Observe.observe harmony proposal shim', function () {
         });
 
 
-        it("should call the observer only one time when multiples changes records are delivered", function () {
+        it('should call the observer only one time when multiples changes records are delivered', function () {
             notifier.notify({
                 type: 'updated',
                 name: 'foo'
@@ -293,7 +308,7 @@ describe('Observe.observe harmony proposal shim', function () {
         });
 
 
-        it("should call the observer only one time when multiples changes records are delivered", function () {
+        it('should call the observer only one time when multiples changes records are delivered', function () {
             notifier.notify({
                 type: 'updated'
             });
@@ -306,7 +321,7 @@ describe('Observe.observe harmony proposal shim', function () {
         });
 
 
-        it("should deliver a change  record  with a property 'object' corresponding to the observed object", function () {
+        it('should deliver a change  record  with a property "object" corresponding to the observed object', function () {
             notifier.notify({
                 type: 'updated'
             });
@@ -315,7 +330,7 @@ describe('Observe.observe harmony proposal shim', function () {
             expect(deliveredRecord).to.have.property('object', obj);
         });
 
-        it("should ignore an object property  specified in the original change record", function () {
+        it('should ignore an object property  specified in the original change record', function () {
             notifier.notify({
                 type: 'updated',
                 object : 'foo'
@@ -325,7 +340,7 @@ describe('Observe.observe harmony proposal shim', function () {
             expect(deliveredRecord).to.have.property('object', obj);
         });
 
-        it("should deliver a change record with all other property equals to the original one", function () {
+        it('should deliver a change record with all other property equals to the original one', function () {
             notifier.notify({
                 type: 'updated',
                 foo : 1,
@@ -337,7 +352,7 @@ describe('Observe.observe harmony proposal shim', function () {
             expect(deliveredRecord).to.have.property('bar', 2);
         });
 
-        it("should call the observer function only once time even in case of multiple observation", function () {
+        it('should call the observer function only once time even in case of multiple observation', function () {
             Object.observe(obj, observer);
             notifier.notify({
                 type: 'updated',
@@ -348,7 +363,7 @@ describe('Observe.observe harmony proposal shim', function () {
             expect(observer.calledOnce).to.be.ok();
         });
 
-        it("should not call a function that has not been used for an observation", function () {
+        it('should not call a function that has not been used for an observation', function () {
             var observer2 = sinon.spy();
             notifier.notify({
                 type: 'updated',
@@ -358,7 +373,7 @@ describe('Observe.observe harmony proposal shim', function () {
             expect(observer2.called).not.to.be.ok();
         });
 
-        it("should not call the observer after call to Object.unobserve", function () {
+        it('should not call the observer after call to Object.unobserve', function () {
             Object.unobserve(obj, observer);
             notifier.notify({
                 type: 'updated',
@@ -368,7 +383,7 @@ describe('Observe.observe harmony proposal shim', function () {
             expect(observer.called).not.to.be.ok();
         });
 
-        it("should not deliver change records between an unobservation and a reobservation", function () {
+        it('should not deliver change records between an unobservation and a reobservation', function () {
             Object.unobserve(obj, observer);
             notifier.notify({
                 type: 'updated',
@@ -384,7 +399,7 @@ describe('Observe.observe harmony proposal shim', function () {
         });
 
 
-        it("should deliver records in the order of notification", function () {
+        it('should deliver records in the order of notification', function () {
             notifier.notify({
                 type: 'updated',
                 order: 0
@@ -409,7 +424,7 @@ describe('Observe.observe harmony proposal shim', function () {
         });
 
 
-        it("should deliver change records asynchronously without a call to Object.deliverChangeRecords", function (done) {
+        it('should deliver change records asynchronously without a call to Object.deliverChangeRecords', function (done) {
             this.timeout(100);
             Object.observe(obj, function () {
                 done();
@@ -420,7 +435,7 @@ describe('Observe.observe harmony proposal shim', function () {
         });
 
 
-        it("should deliver change records in the order of observation", function (done) {
+        it('should deliver change records in the order of observation', function (done) {
             this.timeout(100);
             var obj2 = {},
                 notifier2 = Object.getNotifier(obj2),
