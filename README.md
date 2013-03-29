@@ -63,7 +63,7 @@ Example :
 Build And Test:
 ---------------
 
-Require [bower](https://github.com/twitter/bower), [grunt-cli](https://github.com/gruntjs/grunt-cli), and [phantomJS](http://phantomjs.org/) installed on your machine.
+Require [bower](https://github.com/twitter/bower) and [grunt-cli](https://github.com/gruntjs/grunt-cli) installed on your machine.
 
     npm install & bower install
     grunt // test and build

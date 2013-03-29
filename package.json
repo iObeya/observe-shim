@@ -1,7 +1,7 @@
 {
   "name": "observe-shim",
   "description": "An Object.observe harmony proposal shim",
-  "version": "0.0.2",
+  "version": "0.1.1",
   "keywords": [
     "observe",
     "data binding"
