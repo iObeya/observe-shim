@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>DataBinding Example</title>
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="../external/poly/_base.js"></script>
+    <script type="text/javascript" src="../external/poly/function.js"></script>
+    <script type="text/javascript" src="../external/poly/object.js"></script>
+    <script type="text/javascript" src="../external/poly/array.js"></script>
+    <![endif]-->
+    <script type="text/javascript" src="../external/jquery.min.js"></script>
+    <script type="text/javascript" src="../external/observe-utils.js"></script>
+    <script type="text/javascript" src="../lib/observer-shim.js"></script>
+    <script type="text/javascript" src="../external/rivets.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function(){
+            rivets.configure({
+                adapter: {
+                    subscribe: function(obj, keypath, callback) {
+                        ObserveUtils.defineObservableProperties(obj, keypath);
+                        Object.observe(obj, callback);
+                    },
+                    unsubscribe: function(obj, keypath, callback) {
+                        Object.unobserve(obj, callback);
+                    },
+                    read: function(obj, keypath) {
+                        return obj[keypath];
+                    },
+                    publish: function(obj, keypath, value) {
+                        obj[keypath] = value;
+                    }
+                }
+            });
+
+            rivets.binders.color = function(el, value){
+                $(el).css("background-color", value);
+            }
+
+            var user = {Name: 'ismail', Color: "red"};
+            rivets.bind(document.getElementById('user-view'), {user: user});
+
+            setTimeout(function(){
+                alert("UI updating from model...");
+                user.Color = "lightgreen";
+                user.Name = "ismail codar";
+            }, 3000);
+
+        });
+    </script>
+</head>
+<body>
+<div id="user-view">
+    <h1 data-text="user.Name"></h1>
+    <input data-color="user.Color" data-value="user.Name">
+</div>
+</body>
+</html>
