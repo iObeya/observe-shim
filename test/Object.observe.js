@@ -18,56 +18,108 @@
 describe('Observe.observe harmony proposal shim', function () {
     'use strict';
 
+
+    function testIsObject(testFunc) {
+        expect(function () {
+            testFunc(5);
+        }).to.throwException(function (e) {
+            expect(e).to.be.a(TypeError);
+        });
+
+        expect(function () {
+            testFunc('string');
+        }).to.throwException(function (e) {
+            expect(e).to.be.a(TypeError);
+        });
+
+        expect(function () {
+            testFunc(NaN);
+        }).to.throwException(function (e) {
+            expect(e).to.be.a(TypeError);
+        });
+
+        expect(function () {
+            testFunc(null);
+        }).to.throwException(function (e) {
+            expect(e).to.be.a(TypeError);
+        });
+
+        expect(function () {
+            testFunc(undefined);
+        }).to.throwException(function (e) {
+            expect(e).to.be.a(TypeError);
+        });
+
+        expect(function () {
+            testFunc({});
+        }).to.not.throwException();
+
+        expect(function () {
+            testFunc(function () {});
+        }).to.not.throwException();
+    }
+
+    function testIsCallable(testFunc) {
+        expect(function () {
+            testFunc(5);
+        }).to.throwException(function (e) {
+            expect(e).to.be.a(TypeError);
+        });
+
+        expect(function () {
+            testFunc('string');
+        }).to.throwException(function (e) {
+            expect(e).to.be.a(TypeError);
+        });
+
+        expect(function () {
+            testFunc(NaN);
+        }).to.throwException(function (e) {
+            expect(e).to.be.a(TypeError);
+        });
+
+        expect(function () {
+            testFunc(null);
+        }).to.throwException(function (e) {
+            expect(e).to.be.a(TypeError);
+        });
+
+        expect(function () {
+            testFunc(undefined);
+        }).to.throwException(function (e) {
+            expect(e).to.be.a(TypeError);
+        });
+
+        expect(function () {
+            testFunc({});
+        }).to.throwException(function (e) {
+            expect(e).to.be.a(TypeError);
+        });
+
+        expect(function () {
+            testFunc(new Function(''));
+        }).to.not.throwException();
+
+        expect(function () {
+            testFunc(function () {});
+        }).to.not.throwException();
+    }
+
     describe('Object.observe', function () {
         it('should throw an error when passing an non object at first parameter', function () {
-            expect(function () {
-                Object.observe(5, function () {  });
-            }).to.throwException(function (e) {
-                expect(e).to.be.a(TypeError);
-            });
-
-            expect(function () {
-                Object.observe('g', function () { });
-            }).to.throwException(function (e) {
-                expect(e).to.be.a(TypeError);
-            });
-
-            expect(function () {
-                Object.observe(function () { });
-            }).to.throwException(function (e) {
-                expect(e).to.be.a(TypeError);
-            });
-
-            expect(function () {
-                Object.observe(NaN, function () { });
-            }).to.throwException(function (e) {
-                expect(e).to.be.a(TypeError);
-            });
-
-            expect(function () {
-                Object.observe(null, function () {  });
-            }).to.throwException(function (e) {
-                expect(e).to.be.a(TypeError);
-            });
-
-            expect(function () {
-                Object.observe(undefined, function () { });
-            }).to.throwException(function (e) {
-                expect(e).to.be.a(TypeError);
+            testIsObject(function (target) {
+                Object.observe(target, function () {  });
             });
         });
 
         it('should throw and error when second parameter is not callable', function () {
-            expect(function () {
-                Object.observe({}, {});
-            }).to.throwException(function (e) {
-                expect(e).to.be.a(TypeError);
+            testIsCallable(function (observer) {
+                Object.observe({}, observer);
             });
         });
 
         it('should throw and error when second parameter is frozen', function () {
-            var observer = function () {
-            };
+            var observer = function () { };
             Object.freeze(observer);
             expect(function () {
                 Object.observe({}, observer);
@@ -75,93 +127,28 @@ describe('Observe.observe harmony proposal shim', function () {
                 expect(e).to.be.a(TypeError);
             });
         });
+
+
     });
 
     describe('Object.unobserve', function () {
         it('should throw an error when passing an non object at first parameter', function () {
-            expect(function () {
-                Object.unobserve(5, function () {
-                });
-            }).to.throwException(function (e) {
-                expect(e).to.be.a(TypeError);
-            });
-
-            expect(function () {
-                Object.unobserve('g', function () { });
-            }).to.throwException(function (e) {
-                expect(e).to.be.a(TypeError);
-            });
-
-            expect(function () {
-                Object.unobserve(function () { });
-            }).to.throwException(function (e) {
-                expect(e).to.be.a(TypeError);
-            });
-
-            expect(function () {
-                Object.unobserve(NaN, function () { });
-            }).to.throwException(function (e) {
-                expect(e).to.be.a(TypeError);
-            });
-
-            expect(function () {
-                Object.unobserve(null, function () { });
-            }).to.throwException(function (e) {
-                expect(e).to.be.a(TypeError);
-            });
-
-            expect(function () {
-                Object.unobserve(undefined, function () { });
-            }).to.throwException(function (e) {
-                expect(e).to.be.a(TypeError);
+            testIsObject(function (target) {
+                Object.unobserve(target, function () {  });
             });
         });
 
         it('should throw and error when second parameter is not callable', function () {
-            expect(function () {
-                Object.unobserve({}, {});
-            }).to.throwException(function (e) {
-                expect(e).to.be.a(TypeError);
+            testIsCallable(function (observer) {
+                Object.unobserve({}, observer);
             });
         });
     });
 
     describe('Object.getNotifier', function () {
         it('should throw an error when passing an non object at first parameter', function () {
-            expect(function () {
-                Object.getNotifier(5);
-            }).to.throwException(function (e) {
-                expect(e).to.be.a(TypeError);
-            });
-
-            expect(function () {
-                Object.getNotifier('g');
-            }).to.throwException(function (e) {
-                expect(e).to.be.a(TypeError);
-            });
-
-            expect(function () {
-                Object.getNotifier(function () {  });
-            }).to.throwException(function (e) {
-                expect(e).to.be.a(TypeError);
-            });
-
-            expect(function () {
-                Object.getNotifier(NaN);
-            }).to.throwException(function (e) {
-                expect(e).to.be.a(TypeError);
-            });
-
-            expect(function () {
-                Object.getNotifier(null);
-            }).to.throwException(function (e) {
-                expect(e).to.be.a(TypeError);
-            });
-
-            expect(function () {
-                Object.getNotifier(undefined);
-            }).to.throwException(function (e) {
-                expect(e).to.be.a(TypeError);
+            testIsObject(function (target) {
+                Object.getNotifier(target);
             });
         });
 
@@ -190,50 +177,11 @@ describe('Observe.observe harmony proposal shim', function () {
 
     describe('Object.deliverChangeRecords', function () {
         it('should throw an error when passing an non object at first parameter', function () {
-            expect(function () {
-                Object.unobserve(5, function () { });
-            }).to.throwException(function (e) {
-                expect(e).to.be.a(TypeError);
-            });
-
-            expect(function () {
-                Object.unobserve('g', function () { });
-            }).to.throwException(function (e) {
-                expect(e).to.be.a(TypeError);
-            });
-
-            expect(function () {
-                Object.unobserve(function () { });
-            }).to.throwException(function (e) {
-                expect(e).to.be.a(TypeError);
-            });
-
-            expect(function () {
-                Object.unobserve(NaN, function () { });
-            }).to.throwException(function (e) {
-                expect(e).to.be.a(TypeError);
-            });
-
-            expect(function () {
-                Object.unobserve(null, function () { });
-            }).to.throwException(function (e) {
-                expect(e).to.be.a(TypeError);
-            });
-
-            expect(function () {
-                Object.unobserve(undefined, function () {  });
-            }).to.throwException(function (e) {
-                expect(e).to.be.a(TypeError);
+            testIsCallable(function (observer) {
+                Object.deliverChangeRecords(observer);
             });
         });
 
-        it('should throw and error when second parameter is not callable', function () {
-            expect(function () {
-                Object.unobserve({}, {});
-            }).to.throwException(function (e) {
-                expect(e).to.be.a(TypeError);
-            });
-        });
     });
 
 
@@ -261,7 +209,7 @@ describe('Observe.observe harmony proposal shim', function () {
 
     });
 
-    describe('Changes  delivery', function () {
+    describe('Changes delivery', function () {
         var obj, notifier, observer;
 
         beforeEach(function () {
@@ -458,7 +406,5 @@ describe('Observe.observe harmony proposal shim', function () {
                 type: 'updated'
             });
         });
-
-
     });
 });
