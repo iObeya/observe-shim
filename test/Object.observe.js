@@ -97,7 +97,9 @@ describe('Observe.observe harmony proposal shim', function () {
         });
 
         expect(function () {
-            testFunc(new Function(''));
+            //tricks for jshint
+            var Fn = Function;
+            testFunc(new Fn(''));
         }).to.not.throwException();
 
         expect(function () {

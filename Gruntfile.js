@@ -30,6 +30,14 @@ module.exports = function (grunt) {
                 run : true
             }
         },
+        mochaTest : {
+            test: {
+                options: {
+                    reporter: 'spec'
+                },
+                src: ['test/node-index.js']
+            }
+        },
         clean : {
             folder : ['docs']
         },
@@ -41,6 +49,6 @@ module.exports = function (grunt) {
         }
     });
 
-    grunt.registerTask('test', ['jshint', 'mocha']);
+    grunt.registerTask('test', ['jshint', 'mocha', 'mochaTest']);
     grunt.registerTask('default', ['test', 'clean', 'docco']);
 };
