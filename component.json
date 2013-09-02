@@ -1,0 +1,12 @@
+{
+    "name": "observe-shim",
+    "version": "0.3.0",
+    "description": "An Object.observe harmony proposal shim",
+    "main": "lib/observe-shim.js",
+    "repo": "KapIT/observe-shim",
+    "keywords": [
+        "observe",
+        "data binding"
+    ],
+    "license": "Apache"
+}

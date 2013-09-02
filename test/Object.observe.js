@@ -114,13 +114,13 @@ describe('Observe.observe harmony proposal shim', function () {
             });
         });
 
-        it('should throw and error when second parameter is not callable', function () {
+        it('should throw an error when second parameter is not callable', function () {
             testIsCallable(function (observer) {
                 Object.observe({}, observer);
             });
         });
 
-        it('should throw and error when second parameter is frozen', function () {
+        it('should throw an error when second parameter is frozen', function () {
             var observer = function () { };
             Object.freeze(observer);
             expect(function () {
@@ -130,6 +130,23 @@ describe('Observe.observe harmony proposal shim', function () {
             });
         });
 
+        it('should throw an error when third parameter is defined and is not an array like of string', function () {
+            expect(function () {
+                Object.observe({}, function () {}, {});
+            }).to.throwException(function (e) {
+                expect(e).to.be.a(TypeError);
+            });
+
+            expect(function () {
+                Object.observe({}, function () {}, [5, {}]);
+            }).to.throwException(function (e) {
+                expect(e).to.be.a(TypeError);
+            });
+
+            expect(function () {
+                Object.observe({}, function () {}, ['hello', '']);
+            }).to.not.throwException();
+        });
 
     });
 
@@ -140,11 +157,13 @@ describe('Observe.observe harmony proposal shim', function () {
             });
         });
 
-        it('should throw and error when second parameter is not callable', function () {
+        it('should throw an error when second parameter is not callable', function () {
             testIsCallable(function (observer) {
                 Object.unobserve({}, observer);
             });
         });
+
+
     });
 
     describe('Object.getNotifier', function () {
@@ -208,6 +227,45 @@ describe('Observe.observe harmony proposal shim', function () {
             });
         });
 
+
+    });
+
+
+    describe('Notifier.performChange', function () {
+
+        var notifier = Object.getNotifier({});
+
+        it('should throw an error when passing a non string as first parameter', function () {
+            expect(function () {
+                notifier.performChange(null, function () {});
+            }).to.throwException(function (e) {
+                expect(e).to.be.a(TypeError);
+            });
+        });
+
+        it('should throw an error when second parameter is not callable', function () {
+            testIsCallable(function (observer) {
+                notifier.performChange('update', observer);
+            });
+        });
+
+        it('should call the changeFunction', function () {
+            var spy = sinon.spy();
+            notifier.performChange('update', spy);
+            expect(spy.calledOnce).to.be.ok();
+        });
+
+
+        it('should rethrow any error thrown by the changeFunction', function () {
+            expect(function () {
+                notifier.performChange('update', function () {
+                    throw new RangeError('changeFunction exception');
+                });
+            }).to.throwException(function (e) {
+                expect(e).to.be.a(RangeError);
+                expect(e.message).to.be('changeFunction exception');
+            });
+        });
 
     });
 
@@ -407,6 +465,87 @@ describe('Observe.observe harmony proposal shim', function () {
             notifier2.notify({
                 type: 'updated'
             });
+        });
+
+
+        it('should only deliver change records with type in the accept list if defined', function () {
+            Object.observe(obj, observer, ['bar', 'foo']);
+
+            notifier.notify({
+                type: 'updated'
+            });
+
+            notifier.notify({
+                type: 'foo'
+            });
+
+            notifier.notify({
+                type: 'new'
+            });
+
+            notifier.notify({
+                type: 'foo'
+            });
+
+            notifier.notify({
+                type: 'bar'
+            });
+
+            Object.deliverChangeRecords(observer);
+
+            expect(getDeliveredRecords()).to.be.eql([
+                { object : obj, type: 'foo' },
+                { object : obj, type: 'foo' },
+                { object : obj, type: 'bar' }
+            ]);
+        });
+
+
+        it('should only deliver first changeType passed to performChange if part of accept list during a performChange', function () {
+            var notifyFoo = function () {
+                notifier.performChange('foo', function () {
+                    notifier.notify({type : 'hello'});
+                });
+                notifier.notify({ type : 'foo'});
+
+            }, notifyBar = function () {
+                notifier.performChange('bar', function () {
+                    notifier.notify({type : 'world'});
+                });
+                notifier.notify({ type : 'bar'});
+            }, notifyFooAndBar = function () {
+                notifier.performChange('fooAndBar', function () {
+                    notifyFoo();
+                    notifyBar();
+                });
+                notifier.notify({type : 'fooAndBar'});
+            }, observer2 = sinon.spy();
+
+            Object.observe(obj, observer2, ['foo', 'bar', 'fooAndBar']);
+
+            notifyFoo();
+            notifyBar();
+            notifyFooAndBar();
+            Object.deliverChangeRecords(observer);
+            Object.deliverChangeRecords(observer2);
+
+            expect(getDeliveredRecords()).to.be.eql([
+                { object : obj, type: 'hello' },
+                { object : obj, type: 'foo' },
+                { object : obj, type: 'world' },
+                { object : obj, type: 'bar' },
+                { object : obj, type: 'hello' },
+                { object : obj, type: 'foo' },
+                { object : obj, type: 'world' },
+                { object : obj, type: 'bar' },
+                { object : obj, type: 'fooAndBar' }
+            ]);
+
+            expect(observer2.args[0][0]).to.be.eql([
+                { object : obj, type: 'foo' },
+                { object : obj, type: 'bar' },
+                { object : obj, type: 'fooAndBar' }
+            ]);
         });
     });
 });

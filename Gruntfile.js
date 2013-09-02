@@ -27,7 +27,8 @@ module.exports = function (grunt) {
         mocha : {
             index: ['test/index.html'],
             options: {
-                run : true
+                run : true,
+                log : true
             }
         },
         mochaTest : {
