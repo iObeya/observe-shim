@@ -1,37 +1,67 @@
-
-interface INotification {
-    type: notifyType;
-    object: Object;
-    name: string;
-}
-
-interface IUpdateNotification extends INotification {
-    oldValue: any;
-}
-
+/** Chenge type  */
 declare enum notifyType {
     "new",
     "updated",
-    "deleted", 
+    "deleted",
     "splice"
 } 
 
-interface INotifierPrototype {
-    notify(o: any);       
+/** Notification object */
+interface Notification {
+    type: string;
+    object: any;
+    name: string;
 }
 
+/** Update notification object */
+interface UpdateNotification extends Notification {
+    oldValue: any;
+}
+
+/** Signature of notification callback */
+interface ObserverCallback {
+    (changes: Notification[]): void;
+}
+
+/** Signature of Notifier object */
+interface INotifier {
+    notify(changeRecord: Notification): void;
+    performChange(changeType: notifyType, changeFn: ObserverCallback ): void;       
+}
+
+/** Extension to Object interface */
 interface Object {
-    observe(o: Object, callback: any);
-    observe(o: Object, callback: any, accept: notifyType[]);
-    unobserve(o: Object, callback: any);
-    deliverChangeRecords(callback: any);
-    getNotifier(o: Object): INotifierPrototype;
+    observe(o: Object, callback: ObserverCallback);
+    observe(o: Object, callback: ObserverCallback, accept: notifyType[]);
+    unobserve(o: Object, callback: ObserverCallback);
+    deliverChangeRecords(callback: ObserverCallback);
+    getNotifier(o: Object): INotifier;
 }
 
+/** Extension to Object interface */
 declare var Object: {
-    observe(o: Object, callback: any);
-    observe(o: Object, callback: any, accept: notifyType[]);
-    unobserve(o: Object, callback: any);
-    deliverChangeRecords(callback: any);
-    getNotifier(o: Object): INotifierPrototype;
+    observe(o: Object, callback: ObserverCallback);
+    observe(o: Object, callback: ObserverCallback, accept: notifyType[]);
+    unobserve(o: Object, callback: ObserverCallback);
+    deliverChangeRecords(callback: ObserverCallback);
+    getNotifier(o: Object): INotifier;
+}
+
+
+/** Extension to Array interface */
+interface Array {
+    observe(o: Object, callback: ObserverCallback);
+    observe(o: Object, callback: ObserverCallback, accept: notifyType[]);
+    unobserve(o: Object, callback: ObserverCallback);
+    deliverChangeRecords(callback: ObserverCallback);
+    getNotifier(o: Object): INotifier;
+}
+
+/** Extension to Array interface */
+declare var Array: {
+    observe(o: Object, callback: ObserverCallback);
+    observe(o: Object, callback: ObserverCallback, accept: notifyType[]);
+    unobserve(o: Object, callback: ObserverCallback);
+    deliverChangeRecords(callback: ObserverCallback);
+    getNotifier(o: Object): INotifier;
 }
