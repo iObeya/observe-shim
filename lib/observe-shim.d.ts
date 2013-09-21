@@ -1,4 +1,4 @@
-/** Chenge type  */
+/** Change type  */
 declare enum notifyType {
     "new",
     "updated",
