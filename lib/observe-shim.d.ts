@@ -38,27 +38,8 @@ interface Object {
     getNotifier(o: Object): INotifier;
 }
 
-/** Extension to Object interface */
-declare var Object: {
-    observe(o: Object, callback: ObserverCallback);
-    observe(o: Object, callback: ObserverCallback, accept: notifyType[]);
-    unobserve(o: Object, callback: ObserverCallback);
-    deliverChangeRecords(callback: ObserverCallback);
-    getNotifier(o: Object): INotifier;
-}
-
-
 /** Extension to Array interface */
 interface Array {
-    observe(o: Object, callback: ObserverCallback);
-    observe(o: Object, callback: ObserverCallback, accept: notifyType[]);
-    unobserve(o: Object, callback: ObserverCallback);
-    deliverChangeRecords(callback: ObserverCallback);
-    getNotifier(o: Object): INotifier;
-}
-
-/** Extension to Array interface */
-declare var Array: {
     observe(o: Object, callback: ObserverCallback);
     observe(o: Object, callback: ObserverCallback, accept: notifyType[]);
     unobserve(o: Object, callback: ObserverCallback);
