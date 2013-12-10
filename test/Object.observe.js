@@ -292,7 +292,7 @@ describe('Observe.observe harmony proposal shim', function () {
 
         it('should call the observer when a change record is delivered', function () {
             notifier.notify({
-                type: 'updated',
+                type: 'update',
                 name: 'foo'
             });
 
@@ -303,11 +303,11 @@ describe('Observe.observe harmony proposal shim', function () {
 
         it('should call the observer only one time when multiples changes records are delivered', function () {
             notifier.notify({
-                type: 'updated',
+                type: 'update',
                 name: 'foo'
             });
             notifier.notify({
-                type: 'updated',
+                type: 'update',
                 name: 'foo'
             });
 
@@ -318,10 +318,10 @@ describe('Observe.observe harmony proposal shim', function () {
 
         it('should call the observer only one time when multiples changes records are delivered', function () {
             notifier.notify({
-                type: 'updated'
+                type: 'update'
             });
             notifier.notify({
-                type: 'updated'
+                type: 'update'
             });
 
             Object.deliverChangeRecords(observer);
@@ -331,7 +331,7 @@ describe('Observe.observe harmony proposal shim', function () {
 
         it('should deliver a change  record  with a property "object" corresponding to the observed object', function () {
             notifier.notify({
-                type: 'updated'
+                type: 'update'
             });
             Object.deliverChangeRecords(observer);
             var deliveredRecord = getDeliveredRecords()[0];
@@ -340,7 +340,7 @@ describe('Observe.observe harmony proposal shim', function () {
 
         it('should ignore an object property  specified in the original change record', function () {
             notifier.notify({
-                type: 'updated',
+                type: 'update',
                 object : 'foo'
             });
             Object.deliverChangeRecords(observer);
@@ -350,7 +350,7 @@ describe('Observe.observe harmony proposal shim', function () {
 
         it('should deliver a change record with all other property equals to the original one', function () {
             notifier.notify({
-                type: 'updated',
+                type: 'update',
                 foo : 1,
                 bar : 2
             });
@@ -360,10 +360,10 @@ describe('Observe.observe harmony proposal shim', function () {
             expect(deliveredRecord).to.have.property('bar', 2);
         });
 
-        it('should call the observer function only once time even in case of multiple observation', function () {
+        it('should call the observer function only once even in case of multiple observation', function () {
             Object.observe(obj, observer);
             notifier.notify({
-                type: 'updated',
+                type: 'update',
                 name: 'foo'
             });
 
@@ -374,7 +374,7 @@ describe('Observe.observe harmony proposal shim', function () {
         it('should not call a function that has not been used for an observation', function () {
             var observer2 = sinon.spy();
             notifier.notify({
-                type: 'updated',
+                type: 'update',
                 name: 'foo'
             });
             Object.deliverChangeRecords(observer2);
@@ -384,7 +384,7 @@ describe('Observe.observe harmony proposal shim', function () {
         it('should not call the observer after call to Object.unobserve', function () {
             Object.unobserve(obj, observer);
             notifier.notify({
-                type: 'updated',
+                type: 'update',
                 name: 'foo'
             });
             Object.deliverChangeRecords(observer);
@@ -394,12 +394,12 @@ describe('Observe.observe harmony proposal shim', function () {
         it('should not deliver change records between an unobservation and a reobservation', function () {
             Object.unobserve(obj, observer);
             notifier.notify({
-                type: 'updated',
+                type: 'update',
                 name: 'foo'
             });
             Object.observe(obj, observer);
             notifier.notify({
-                type: 'updated',
+                type: 'update',
                 name: 'foo'
             });
             Object.deliverChangeRecords(observer);
@@ -409,17 +409,17 @@ describe('Observe.observe harmony proposal shim', function () {
 
         it('should deliver records in the order of notification', function () {
             notifier.notify({
-                type: 'updated',
+                type: 'update',
                 order: 0
             });
 
             notifier.notify({
-                type: 'updated',
+                type: 'update',
                 order: 1
             });
 
             notifier.notify({
-                type: 'updated',
+                type: 'update',
                 order: 2
             });
 
@@ -438,7 +438,7 @@ describe('Observe.observe harmony proposal shim', function () {
                 done();
             });
             notifier.notify({
-                type: 'updated'
+                type: 'update'
             });
         });
 
@@ -459,11 +459,11 @@ describe('Observe.observe harmony proposal shim', function () {
             });
 
             notifier.notify({
-                type: 'updated'
+                type: 'update'
             });
 
             notifier2.notify({
-                type: 'updated'
+                type: 'update'
             });
         });
 
@@ -472,7 +472,7 @@ describe('Observe.observe harmony proposal shim', function () {
             Object.observe(obj, observer, ['bar', 'foo']);
 
             notifier.notify({
-                type: 'updated'
+                type: 'update'
             });
 
             notifier.notify({
@@ -500,25 +500,40 @@ describe('Observe.observe harmony proposal shim', function () {
             ]);
         });
 
+        it('should deliver a change record with \'type\' property equals to the performChange \'changeType\' ' +
+            'argument value and with properties of the returned value of the changeFunction', function () {
+            notifier.performChange('update', function () { });
+            notifier.performChange('delete', function () {
+                return {
+                    message: 'hello world'
+                };
+            });
+
+
+            Object.deliverChangeRecords(observer);
+
+            expect(getDeliveredRecords()).to.be.eql([
+                { object : obj, type: 'update' },
+                { object : obj, type: 'delete', message: 'hello world' }
+            ]);
+        });
+
 
         it('should only deliver first changeType passed to performChange if part of accept list during a performChange', function () {
             var notifyFoo = function () {
                 notifier.performChange('foo', function () {
-                    notifier.notify({type : 'hello'});
+                    notifier.notify({type : 'reconfigure'});
                 });
-                notifier.notify({ type : 'foo'});
 
             }, notifyBar = function () {
                 notifier.performChange('bar', function () {
-                    notifier.notify({type : 'world'});
+                    notifier.notify({type : 'setPrototype'});
                 });
-                notifier.notify({ type : 'bar'});
             }, notifyFooAndBar = function () {
                 notifier.performChange('fooAndBar', function () {
                     notifyFoo();
                     notifyBar();
                 });
-                notifier.notify({type : 'fooAndBar'});
             }, observer2 = sinon.spy();
 
             Object.observe(obj, observer2, ['foo', 'bar', 'fooAndBar']);
@@ -530,15 +545,10 @@ describe('Observe.observe harmony proposal shim', function () {
             Object.deliverChangeRecords(observer2);
 
             expect(getDeliveredRecords()).to.be.eql([
-                { object : obj, type: 'hello' },
-                { object : obj, type: 'foo' },
-                { object : obj, type: 'world' },
-                { object : obj, type: 'bar' },
-                { object : obj, type: 'hello' },
-                { object : obj, type: 'foo' },
-                { object : obj, type: 'world' },
-                { object : obj, type: 'bar' },
-                { object : obj, type: 'fooAndBar' }
+                { object : obj, type: 'reconfigure' },
+                { object : obj, type: 'setPrototype' },
+                { object : obj, type: 'reconfigure' },
+                { object : obj, type: 'setPrototype' }
             ]);
 
             expect(observer2.args[0][0]).to.be.eql([
@@ -547,5 +557,7 @@ describe('Observe.observe harmony proposal shim', function () {
                 { object : obj, type: 'fooAndBar' }
             ]);
         });
+
+
     });
 });
