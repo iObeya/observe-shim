@@ -27,10 +27,6 @@ ObserveUtils :
 
 The ['observe-utils.js'](http://github.com/kapit/observe-utils/) utilities that facilitate the use of this shim can be found on his [own repository](http://github.com/kapit/observe-utils/)
 
-Usage :
--------
-
-This shim does not try to detect the Object.observe feature presence, instead it leaves you the charge to detected it, and to conditionally load this shim, using the feature detection library of your choice.
 
 Example :
 -------
