@@ -1,6 +1,6 @@
 {
     "name": "observe-shim",
-    "version": "0.4.1",
+    "version": "0.4.2",
     "description": "An Object.observe harmony proposal shim",
     "main": "lib/observe-shim.js",
     "repo": "KapIT/observe-shim",
