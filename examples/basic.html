@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Basic Example</title>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://raw.github.com/KapIT/observe-utils/master/lib/observe-utils.js"></script>
+    <script type="text/javascript" src="../lib/observer-shim.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function(){
+            var myObject = {};
+            ObserveUtils.defineObservableProperties(myObject, "foo", "bar");
+            Object.observe(myObject, function (changes) {
+                console.log(changes);
+            });
+            myObject.foo = "Hello";
+            myObject.bar = "World";
+        });
+    </script>
+</head>
+<body>
+
+</body>
+</html>
